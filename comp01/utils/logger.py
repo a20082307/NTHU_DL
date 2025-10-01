@@ -4,6 +4,7 @@ import sys
 
 from utils.args import args
 
+
 class Logger:
     def __init__(self):
         if not os.path.exists(args.result_path):
@@ -20,16 +21,22 @@ class Logger:
         file_handler = logging.FileHandler(args.result_path + 'log.log')
         file_handler.setFormatter(formatter)
 
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
+        self.stream_handler = logging.StreamHandler()
+        self.stream_handler.setFormatter(formatter)
 
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.INFO)
         self.logger.addHandler(file_handler)
-        self.logger.addHandler(stream_handler)
+        self.logger.addHandler(self.stream_handler)
 
     def print(self, message):
         self.logger.info(message)
+
+    def log(self, message):
+        self.logger.removeHandler(self.stream_handler)
+        self.logger.info(message)
+        self.logger.addHandler(self.stream_handler)
+
 
 logger = Logger()
 
